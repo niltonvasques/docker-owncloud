@@ -10,6 +10,22 @@ RUN curl -k https://download.owncloud.org/community/owncloud-8.0.3.tar.bz2 | tar
 RUN mkdir /var/www/owncloud/data
 RUN chown -R www-data:www-data /var/www/owncloud
 
+RUN find /var/www/owncloud/ -type f -print0 | xargs -0 chmod 0640
+RUN find /var/www/owncloud/ -type d -print0 | xargs -0 chmod 0750
+
+RUN chown -R root:www-data /var/www/owncloud/
+RUN chown -R www-data:www-data /var/www/owncloud/apps/
+RUN chown -R www-data:www-data /var/www/owncloud/config/
+RUN chown -R www-data:www-data /var/www/owncloud/data/
+RUN chown -R www-data:www-data /var/www/owncloud/themes/
+ 
+RUN mkdir /var/www/owncloud/data/.htaccess
+RUN chown root:www-data /var/www/owncloud/.htaccess
+RUN chown root:www-data /var/www/owncloud/data/.htaccess
+ 
+RUN chmod 0644 /var/www/owncloud/.htaccess
+RUN chmod 0644 /var/www/owncloud/data/.htaccess
+
 ADD ./001-owncloud.conf /etc/apache2/sites-available/
 RUN rm -f /etc/apache2/sites-enabled/000*
 RUN ln -s /etc/apache2/sites-available/001-owncloud.conf /etc/apache2/sites-enabled/
